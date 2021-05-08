@@ -1,0 +1,67 @@
+body, html {
+    margin: 10;
+    font-family: sans-serif;
+}
+
+h1 {
+    margin-left: 40%;
+    text-align: center;
+    border: none;
+    border-bottom: 5px solid rgb(54, 220, 241);
+    width: 20%;
+}
+
+table, tr, th, td {
+    border: 1px solid rgb(104, 104, 104);
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th {
+    height: 40px;
+    background-color: #0096c7;
+}
+
+td {
+    height: 50px;
+}
+
+tr {
+    height: 50px;
+}
+
+tr:nth-child(even) {
+    background-color: #00b4d8;
+}
+
+form input {
+    height: 50px;
+    border: none;
+    border-bottom: 1px solid rgb(54, 220, 241);
+    text-align: center;
+    width: 15%;
+    margin-left: 43%;
+}
+
+form input:focus {
+    border-bottom: 3px solid rgb(54, 220, 241);
+    
+}
+
+form input[type=number]#enter_code::-webkit-outer-spin-button,
+form input[type=number]#enter_code::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input#pincode:hover, 
+input#dist:hover, 
+input#distcodes:hover, 
+input#back:hover {
+    background-color: #212d31;
+    color: aliceblue;
+}

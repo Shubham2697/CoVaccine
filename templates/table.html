@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+    <title> CoVin </title>
+    <h1> CoVac</h1>
+{% endblock %}
+
+{% block body %}
+    <form method="post" class = 'table'>
+        <input type="submit" name="back" value="Back" id='back'>
+    </form>
+    <br> </br>
+    {{ table|safe }}
+{% endblock %}

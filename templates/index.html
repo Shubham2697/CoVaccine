@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+    <title> CoVin </title>
+    <h1> CoVac </h1>
+{% endblock %}
+
+{% block body %}
+    <form method="post" >
+        <br><br>
+        <input type="number" name="age" placeholder='Your Age' id="age">
+        <br><br>
+        <input type="number" name="numdays" placeholder='Enter Number of many days, max 7 days' id = 'numdays' min=0 max=7>
+        <br><br>
+        <input type="number" name="enter_code" placeholder='Enter PinCode / District Code' id = 'enter_code'>
+        <br><br>
+        <input type="submit" name="pincode" value="By PinCode" id = 'pincode'>
+        <br>
+        <input type="submit" name="dist" value="By District Code" id = 'dist'>
+        <br><br>
+        <input type="submit" name="distcodes" value="List all District Code" id = 'distcodes'>
+    </form>
+    <br><br>
+    {{ table|safe }}
+{% endblock %}
