@@ -16,7 +16,6 @@ header_df = ['Date', 'Center Code & Name', 'Address', 'District Name', 'State Na
         'Time', 'Paid/Free', 'Minimum Age', 'Available slots', 'Vaccine', 'session_id', 'Slots', 'Vaccine fees']
 
 def rq(url):
-    print(url)
     h = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36',
         }
@@ -24,7 +23,6 @@ def rq(url):
         url, 
         headers = h, 
         )
-    print(r, r.headers)
     return r
 
 @app.route('/', methods = ['GET', 'POST'])
@@ -36,7 +34,6 @@ def index():
     numdays = 1
 
     base_date = datetime.datetime.today()
-    date_str =[(base_date + datetime.timedelta(days=x)).strftime("%d-%m-%Y") for x in range(numdays)]
 
     if request.method == 'GET':
         return render_template('index.html')
@@ -54,6 +51,7 @@ def index():
         except:
             numdays = 1
 
+        date_str =[(base_date + datetime.timedelta(days=x)).strftime("%d-%m-%Y") for x in range(numdays)]
 
         if 'pincode' in request.form.keys() or 'dist' in request.form.keys():
             if str(request.form['enter_code']) != '':
@@ -67,7 +65,9 @@ def index():
                 url = "v2/appointment/sessions/public/calendarByDistrict?district_id={}&date=".format(CODE)
             
             l =[]
+            print(date_str)
             for INP_DATE in date_str:
+                print(INP_DATE)
                 URL = base_url + url + INP_DATE
                 response = rq(URL)
                 if response.ok:
@@ -83,7 +83,7 @@ def index():
                                         center['district_name'], 
                                         center['state_name'], 
                                         center['pincode'],
-                                        center['from'] + ' to ' + center['to'], 
+                                        center['from'][:-3] + ' to ' + center['to'][:-3], 
                                         center['fee_type'], 
                                         session["min_age_limit"], 
                                         session['available_capacity'], 
@@ -97,23 +97,22 @@ def index():
                                     except:
                                         pass
 
-                df = pd.DataFrame(l, columns=header_df).drop_duplicates().drop('session_id', axis=1)
-                # df = df[df['Available slots']>0]
-                df = df.astype({'Minimum Age':int})
-                df = df[df['Minimum Age']<=age]
+            df = pd.DataFrame(l, columns=header_df).drop_duplicates().drop('session_id', axis=1)
+            df = df[df['Available slots']>0]
+            df = df.astype({'Minimum Age':int})
+            df = df[df['Minimum Age']<=age]
+            df = df.sort_values(['Minimum Age', 'Date', 'Pincode', 'Available slots'], ascending=[True, True, True, False])
 
-                return render_template("table.html", table=df.to_html(classes='data', header=True, index=False))
+            return render_template("table.html", table=df.to_html(classes='data', header=True, index=False))
         elif 'distcodes' in request.form.keys():
             states = rq(base_url + 'v2/admin/location/states')
             s = []
             if states.ok:
                 states = states.json()
-                # print(json.dumps(states, indent=2))
                 for state in states['states']:
                     distiricts = rq(base_url + 'v2/admin/location/districts/{}'.format(state['state_id']))
                     if distiricts.ok:
                         distiricts = distiricts.json()
-                        # print(json.dumps(distiricts, indent=2))
                         for district in distiricts['districts']:
                             s.append([state['state_name'], state['state_id'], district['district_name'], district['district_id']])
                 
